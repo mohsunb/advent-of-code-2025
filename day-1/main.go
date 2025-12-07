@@ -67,7 +67,9 @@ func firstPart() {
 	zeroCounter := 0
 	for _, rotation := range input {
 		simplifiedDistance := rotation.Distance % 100
+		loops := rotation.Distance / 100
 
+		origin := position
 		switch rotation.Direction {
 		case 'L':
 			position -= simplifiedDistance
@@ -75,15 +77,23 @@ func firstPart() {
 			position += simplifiedDistance
 		}
 
+		rightLoop := false
 		if position < 0 {
+			if origin != 0 {
+				loops++
+			}
 			position += 100
 		} else if position > 99 {
+			loops++
+			rightLoop = true
 			position -= 100
 		}
 
-		if position == 0 {
+		if position == 0 && !rightLoop {
 			zeroCounter++
 		}
+
+		zeroCounter += loops
 	}
 
 	fmt.Println("Answer: " + strconv.Itoa(zeroCounter))
