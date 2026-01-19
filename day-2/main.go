@@ -14,7 +14,7 @@ type ProductRange struct {
 	UpperBound int
 }
 
-func getInputForPartOne(fileName string) []ProductRange {
+func getInput(fileName string) []ProductRange {
 	stream, err := os.Open(fileName)
 
 	if err != nil {
@@ -52,7 +52,7 @@ func getInputForPartOne(fileName string) []ProductRange {
 }
 
 func partOne() {
-	productRanges := getInputForPartOne("input.txt")
+	productRanges := getInput("input.txt")
 
 	var sum int
 	for _, productRange := range productRanges {
@@ -72,6 +72,46 @@ func partOne() {
 	fmt.Println("Part 1 result:", sum)
 }
 
+func partTwo() {
+	productRanges := getInput("input.txt")
+
+	var sum int
+	for _, productRange := range productRanges {
+		for productId := productRange.LowerBound; productId <= productRange.UpperBound; productId++ {
+			stringifiedProductId := strconv.Itoa(productId)
+			if !isValid(stringifiedProductId) {
+				sum += productId
+			}
+		}
+	}
+
+	fmt.Println("Part 2 result:", sum)
+}
+
+func isValid(productId string) bool {
+	valid := true
+
+	length := len(productId)
+	maxLengthPerRepetition := length / 2
+
+	for i := 1; i <= maxLengthPerRepetition; i++ {
+
+		if length%i == 0 {
+			repetitions := length / i
+			if strings.Repeat(productId[:i], repetitions) == productId {
+				valid = false
+			}
+		}
+
+		if !valid {
+			break
+		}
+	}
+
+	return valid
+}
+
 func main() {
 	partOne()
+	partTwo()
 }
