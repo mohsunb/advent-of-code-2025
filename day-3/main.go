@@ -53,6 +53,53 @@ func partOne() {
 	fmt.Println("Part 1 result:", totalJoltage)
 }
 
+func partTwo() {
+	banks := getInput("input.txt")
+
+	var totalJoltage int
+	for _, bank := range banks {
+		joltages := make([]int, 0, 12)
+		lastIndex := -1
+		for i := 0; i < 12; i++ {
+			biggestJoltage, index := biggestJoltageBetweenIndices(bank, lastIndex+1, len(bank)-1-(11-i))
+			lastIndex = index
+			joltages = append(joltages, biggestJoltage)
+		}
+		totalJoltage += calculateTotalJoltage(joltages)
+
+	}
+
+	fmt.Println("Part 2 result:", totalJoltage)
+}
+
+func biggestJoltageBetweenIndices(bank string, minIndex int, maxIndex int) (int, int) {
+	var result int
+	var index int
+
+	for i := minIndex; i <= maxIndex; i++ {
+		joltage, err := strconv.Atoi(string(bank[i]))
+		if err != nil {
+			log.Fatal("Failed to parse joltage:", err)
+		}
+		if joltage > result {
+			result = joltage
+			index = i
+		}
+	}
+
+	return result, index
+}
+
+func calculateTotalJoltage(joltages []int) int {
+	totalJoltageDigits := make([]rune, 0, len(joltages))
+	for i := range joltages {
+		totalJoltageDigits = append(totalJoltageDigits, rune(strconv.Itoa(joltages[i])[0]))
+	}
+	totalJoltage, _ := strconv.Atoi(string(totalJoltageDigits))
+	return totalJoltage
+}
+
 func main() {
 	partOne()
+	partTwo()
 }
